@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Processos | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo-sistema.svg" alt="Logo Sistema Jurídico" class="logo-img" onerror="this.style.display='none';">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html" class="active">Processos</a>
+                <a href="jurisprudencia.html">Jurisprudência</a>
+                <a href="advogados.html">Advogados</a>
+            </nav>
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Entrar</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-section container">
+        <div class="page-header">
+            <h2>Consulta de Processos Judiciais</h2>
+            <p>Gerenciamento e histórico cronológico dos trâmites ativos e arquivados.</p>
+        </div>
+
+        <div class="table-responsive shadow-sm">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Nº do Processo</th>
+                        <th>Autor (Requerente)</th>
+                        <th>Réu (Requerido)</th>
+                        <th>Magistrado</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>5002314-82.2026.8.24.0038</strong></td>
+                        <td>Carlos Eduardo Souza</td>
+                        <td>Banco Sul S/A</td>
+                        <td>Dr. Alexandre Morais</td>
+                        <td><span class="status-badge status-progress">Em Andamento</span></td>
+                        <td><a href="visualizar_processo.html?id=1" class="btn btn-primary btn-sm">Visualizar</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>0312455-19.2025.8.24.0038</strong></td>
+                        <td>Mariana Alcantara</td>
+                        <td>Estado de Santa Catarina</td>
+                        <td>Dra. Helena Rios</td>
+                        <td><span class="status-badge status-success">Julgado</span></td>
+                        <td><a href="visualizar_processo.html?id=2" class="btn btn-primary btn-sm">Visualizar</a></td>
+                    </tr>
+                    <tr>
+                        <td><strong>5019842-11.2026.8.24.0038</strong></td>
+                        <td>Roberto Alencar</td>
+                        <td>Tech Soluções Ltda</td>
+                        <td>Dr. Alexandre Morais</td>
+                        <td><span class="status-badge status-warning">Suspenso</span></td>
+                        <td><a href="visualizar_processo.html?id=3" class="btn btn-primary btn-sm">Visualizar</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 JusDigital - Sistema Jurídico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Processo | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo-sistema.svg" alt="Logo Sistema Jurídico" class="logo-img" onerror="this.style.display='none';">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html" class="active">Processos</a>
+                <a href="jurisprudencia.html">Jurisprudência</a>
+                <a href="advogados.html">Advogados</a>
+            </nav>
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Entrar</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-section container">
+        <div class="action-bar">
+            <a href="processos.html" class="btn btn-outline btn-sm">&larr; Voltar para Processos</a>
+        </div>
+
+        <div id="processo-container"></div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 JusDigital - Sistema Jurídico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        var processos = {
+            1: {num: "5002314-82.2026.8.24.0038", autor: "Carlos Eduardo Souza", reu: "Banco Sul S/A", juiz: "Dr. Alexandre Morais", status: "Em Andamento", classe: "status-progress", vara: "3ª Vara Cível", data_inicio: "10/01/2026"},
+            2: {num: "0312455-19.2025.8.24.0038", autor: "Mariana Alcantara", reu: "Estado de Santa Catarina", juiz: "Dra. Helena Rios", status: "Julgado", classe: "status-success", vara: "1ª Vara da Fazenda Pública", data_inicio: "15/03/2025"},
+            3: {num: "5019842-11.2026.8.24.0038", autor: "Roberto Alencar", reu: "Tech Soluções Ltda", juiz: "Dr. Alexandre Morais", status: "Suspenso", classe: "status-warning", vara: "3ª Vara Cível", data_inicio: "05/02/2026"}
+        };
+
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id');
+        var container = document.getElementById('processo-container');
+
+        if (id && processos[id]) {
+            var p = processos[id];
+            container.innerHTML = '<div class="process-details-card">' +
+                '<div class="process-header-info">' +
+                    '<div>' +
+                        '<h2>Processo Nº ' + p.num + '</h2>' +
+                        '<p class="text-muted">' + p.vara + ' - Magistrado(a): ' + p.juiz + '</p>' +
+                    '</div>' +
+                    '<div>' +
+                        '<span class="status-badge ' + p.classe + '">' + p.status + '</span>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="process-parties">' +
+                    '<p><strong>Autor (Requerente):</strong> ' + p.autor + '</p>' +
+                    '<p><strong>Réu (Requerido):</strong> ' + p.reu + '</p>' +
+                    '<p><strong>Data de Autuação:</strong> ' + p.data_inicio + '</p>' +
+                '</div>' +
+                '<hr class="divider">' +
+                '<h3>Histórico de Trâmites</h3>' +
+                '<div class="timeline">' +
+                    '<div class="timeline-item">' +
+                        '<span class="timeline-date">Hoje</span>' +
+                        '<p>Conclusos para Despacho ao Juiz.</p>' +
+                    '</div>' +
+                    '<div class="timeline-item">' +
+                        '<span class="timeline-date">Há 5 dias</span>' +
+                        '<p>Juntada de Petição de Manifestação da Parte Autora.</p>' +
+                    '</div>' +
+                    '<div class="timeline-item">' +
+                        '<span class="timeline-date">' + p.data_inicio + '</span>' +
+                        '<p>Distribuição do processo por Sorteio.</p>' +
+                    '</div>' +
+                '</div>' +
+            '</div>';
+        } else {
+            container.innerHTML = '<div class="process-details-card">' +
+                '<h2>Processo não encontrado.</h2>' +
+                '<p>O número de processo solicitado não existe no nosso sistema.</p>' +
+            '</div>';
+        }
+    </script>
+</body>
+</html>

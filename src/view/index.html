@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema Jurídico | Consulta Rápida</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo-sistema.svg" alt="Logo Sistema Jurídico" class="logo-img" onerror="this.style.display='none';">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html">Processos</a>
+                <a href="jurisprudencia.html">Jurisprudência</a>
+                <a href="advogados.html">Advogados</a>
+            </nav>
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Entrar</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="hero-section">
+        <div class="container hero-content">
+            <h1>Encontre processos, leis e decisões</h1>
+            <p>Acesse a informação jurídica de forma rápida, estruturada e confiável.</p>
+            
+            <form action="busca.html" method="GET" class="search-form">
+                <input type="text" name="query" class="search-input" placeholder="Digite o número do processo, nome da parte, advogado ou lei..." required>
+                <button type="submit" class="btn btn-primary">Buscar</button>
+            </form>
+        </div>
+    </main>
+
+    <section class="quick-access container">
+        <h2>Acesso Rápido</h2>
+        <div class="cards-grid">
+            <a href="processos.html" class="card" style="text-decoration: none; color: inherit; display: block;">
+                <div class="card-icon">📄</div>
+                <h3>Consultar Processo</h3>
+                <p class="text-muted">Acompanhe o andamento e os trâmites do seu caso.</p>
+            </a>
+            <a href="diarios.html" class="card" style="text-decoration: none; color: inherit; display: block;">
+                <div class="card-icon">🏛️</div>
+                <h3>Diários Oficiais</h3>
+                <p class="text-muted">Busque por publicações e decisões recentes.</p>
+            </a>
+            <a href="modelos.html" class="card" style="text-decoration: none; color: inherit; display: block;">
+                <div class="card-icon">✍️</div>
+                <h3>Modelos de Documentos</h3>
+                <p class="text-muted">Acesse petições e contratos baseados em leis.</p>
+            </a>
+        </div>
+    </section>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 JusDigital - Sistema Jurídico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

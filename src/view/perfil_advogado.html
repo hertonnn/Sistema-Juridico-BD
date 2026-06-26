@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil do Advogado | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo-sistema.svg" alt="Logo Sistema Jurídico" class="logo-img" onerror="this.style.display='none';">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html">Processos</a>
+                <a href="jurisprudencia.html">Jurisprudência</a>
+                <a href="advogados.html" class="active">Advogados</a>
+            </nav>
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Entrar</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-section container">
+        <div class="action-bar">
+            <a href="advogados.html" class="btn btn-outline btn-sm">&larr; Voltar para Advogados</a>
+        </div>
+
+        <div id="perfil-container"></div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 JusDigital - Sistema Jurídico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        var advogados = {
+            1: {nome: "Dr. Adriano Silva", oab: "OAB/SC 45.123", especialidade: "Direito Civil e Contratos", email: "adriano@jusdigital.adv.br", telefone: "(47) 99999-1111", bio: "Especialista em contencioso cível estratégico e elaboração de contratos complexos. Atua há mais de 10 anos garantindo a segurança jurídica de empresas e pessoas físicas em negociações de alto risco.", formacao: "Mestre em Direito Civil pela UFSC.\nPós-graduado em Direito Contratual."},
+            2: {nome: "Dra. Júlia Llorente", oab: "OAB/SC 51.984", especialidade: "Direito Digital e LGPD", email: "julia@jusdigital.adv.br", telefone: "(47) 99999-2222", bio: "Focada na interseção entre tecnologia e direito. Referência regional na adequação de empresas à Lei Geral de Proteção de Dados (LGPD) e na atuação em litígios envolvendo crimes cibernéticos e vazamento de dados.", formacao: "Especialista em Direito Digital pelo Insper.\nCertificação Internacional EXIN DPO."},
+            3: {nome: "Dr. Herton Silveira", oab: "OAB/SC 38.741", especialidade: "Direito Público e Administrativo", email: "herton@jusdigital.adv.br", telefone: "(47) 99999-3333", bio: "Ampla experiência em licitações, contratos administrativos e defesa de servidores públicos. Atuação incisiva perante Tribunais de Contas e na defesa contra processos de improbidade administrativa.", formacao: "Doutor em Direito Administrativo pela USP.\nEx-Procurador Municipal."}
+        };
+
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id');
+        var container = document.getElementById('perfil-container');
+
+        if (id && advogados[id]) {
+            var adv = advogados[id];
+            container.innerHTML = '<div class="profile-layout">' +
+                '<aside class="profile-sidebar shadow-sm">' +
+                    '<div class="profile-photo-placeholder">⚖️</div>' +
+                    '<h2 class="profile-name">' + adv.nome + '</h2>' +
+                    '<p class="profile-oab">' + adv.oab + '</p>' +
+                    '<div class="profile-contact">' +
+                        '<p>📧 ' + adv.email + '</p>' +
+                        '<p>📱 ' + adv.telefone + '</p>' +
+                    '</div>' +
+                '</aside>' +
+                '<section class="profile-main shadow-sm">' +
+                    '<div class="profile-section">' +
+                        '<h3>Sobre o Profissional</h3>' +
+                        '<p>' + adv.bio + '</p>' +
+                    '</div>' +
+                    '<hr class="divider">' +
+                    '<div class="profile-section">' +
+                        '<h3>Áreas de Atuação</h3>' +
+                        '<span class="profile-tag">' + adv.especialidade + '</span>' +
+                        '<span class="profile-tag">Consultoria Jurídica</span>' +
+                        '<span class="profile-tag">Contencioso</span>' +
+                    '</div>' +
+                    '<hr class="divider">' +
+                    '<div class="profile-section">' +
+                        '<h3>Formação Acadêmica</h3>' +
+                        '<p style="white-space: pre-line; color: var(--text-muted);">' + adv.formacao + '</p>' +
+                    '</div>' +
+                '</section>' +
+            '</div>';
+        } else {
+            container.innerHTML = '<div class="process-details-card">' +
+                '<h2>Advogado não encontrado.</h2>' +
+            '</div>';
+        }
+    </script>
+</body>
+</html>

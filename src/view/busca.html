@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados da Busca | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html">Processos</a>
+                <a href="jurisprudencia.html">Jurisprudência</a>
+                <a href="advogados.html">Advogados</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content-section container">
+        <div class="action-bar">
+            <a href="index.html" class="btn btn-outline btn-sm">&larr; Voltar ao Início</a>
+        </div>
+
+        <div class="page-header">
+            <h2>Resultados da Busca</h2>
+            <p>Exibindo resultados para: <strong id="query-display">""</strong></p>
+        </div>
+
+        <div id="results-container"></div>
+    </main>
+
+    <script>
+    (function() {
+        var params = new URLSearchParams(window.location.search);
+        var query = (params.get('query') || '').trim();
+        document.getElementById('query-display').textContent = '"' + query + '"';
+
+        var processos = [
+            {numero: "5113232.155", titulo: "Ação de Cobrança", parte: "Arthur Bertoli vs. Banco Nexus"},
+            {numero: "0012345.999", titulo: "Divórcio Consensual", parte: "Mariana Souza & Carlos Souza"},
+            {numero: "5117890.222", titulo: "Indenização por Danos Morais", parte: "Pedro Henrique vs. Cia Aérea Fly"}
+        ];
+        var advogados = [
+            {nome: "Dr. Carlos Eduardo", oab: "OAB/SC 12.345", area: "Direito Civil"},
+            {nome: "Dra. Mariana Costa", oab: "OAB/SP 67.890", area: "Direito do Trabalho"},
+            {nome: "Dr. Felipe Ramos", oab: "OAB/PR 51.100", area: "Direito Empresarial"}
+        ];
+        var leis = [
+            {titulo: "Lei nº 13.709 (LGPD)", detalhe: "Lei Geral de Proteção de Dados Pessoais de 2018."},
+            {titulo: "Artigo 5º da Constituição", detalhe: "Dos Direitos e Garantias Fundamentais do cidadão."},
+            {titulo: "Lei nº 10.406 (Código Civil)", detalhe: "Regulamenta as relações civis de pessoas e bens."}
+        ];
+
+        function contains(haystack, needle) {
+            return haystack.toLowerCase().indexOf(needle.toLowerCase()) !== -1;
+        }
+
+        var container = document.getElementById('results-container');
+        if (!query) {
+            container.innerHTML = '<div class="shadow-sm" style="background: var(--bg-white); padding: 40px; text-align: center; border-radius: 8px; border: 1px solid var(--border-color);">' +
+                '<p class="text-muted" style="font-size: 1.2rem;">Nenhum registro encontrado para esta pesquisa. Tente buscar por "511", "Carlos" ou "Lei".</p></div>';
+            return;
+        }
+
+        var rProcessos = processos.filter(function(p) { return contains(p.numero, query) || contains(p.parte, query); });
+        var rAdvogados = advogados.filter(function(a) { return contains(a.nome, query) || contains(a.oab, query) || contains(a.area, query); });
+        var rLeis = leis.filter(function(l) { return contains(l.titulo, query) || contains(l.detalhe, query); });
+
+        var total = rProcessos.length + rAdvogados.length + rLeis.length;
+        if (total === 0) {
+            container.innerHTML = '<div class="shadow-sm" style="background: var(--bg-white); padding: 40px; text-align: center; border-radius: 8px; border: 1px solid var(--border-color);">' +
+                '<p class="text-muted" style="font-size: 1.2rem;">Nenhum registro encontrado para esta pesquisa. Tente buscar por "511", "Carlos" ou "Lei".</p></div>';
+            return;
+        }
+
+        var html = '';
+        if (rProcessos.length > 0) {
+            html += '<h3 style="margin: 30px 0 15px 0; color: var(--text-dark);">Processos Encontrados</h3>';
+            html += '<div class="shadow-sm" style="background: var(--bg-white); border-radius: 8px; border: 1px solid var(--border-color); padding: 0 20px;">';
+            rProcessos.forEach(function(p) {
+                html += '<div class="doc-item"><div class="doc-info"><h4>Processo nº ' + p.numero + '</h4><p class="text-muted">' + p.titulo + ' | ' + p.parte + '</p></div><a href="processos.html" class="btn btn-outline btn-sm">Visualizar</a></div>';
+            });
+            html += '</div>';
+        }
+        if (rAdvogados.length > 0) {
+            html += '<h3 style="margin: 30px 0 15px 0; color: var(--text-dark);">Advogados Encontrados</h3>';
+            html += '<div class="cards-grid">';
+            rAdvogados.forEach(function(a) {
+                html += '<div class="card"><span class="profile-tag">' + a.area + '</span><h3 style="margin-top: 10px; margin-bottom: 5px;">' + a.nome + '</h3><p class="text-muted" style="font-size: 0.9rem; margin-bottom: 20px;">' + a.oab + '</p><a href="advogados.html" class="btn btn-primary btn-sm" style="width: 100%; text-align: center; text-decoration: none;">Ver Perfil</a></div>';
+            });
+            html += '</div>';
+        }
+        if (rLeis.length > 0) {
+            html += '<h3 style="margin: 30px 0 15px 0; color: var(--text-dark);">Legislação e Leis</h3>';
+            html += '<div class="shadow-sm" style="background: var(--bg-white); border-radius: 8px; border: 1px solid var(--border-color); padding: 0 20px;">';
+            rLeis.forEach(function(l) {
+                html += '<div class="doc-item"><div class="doc-info"><h4>' + l.titulo + '</h4><p class="text-muted">' + l.detalhe + '</p></div><a href="modelos.html" class="btn btn-outline btn-sm">Ver Modelos</a></div>';
+            });
+            html += '</div>';
+        }
+        container.innerHTML = html;
+    })();
+    </script>
+
+</body>
+</html>

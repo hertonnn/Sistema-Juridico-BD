@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Criar Conta | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh; background-color: var(--bg-main);">
+
+    <div class="card" style="width: 450px; padding: 40px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); background-color: var(--bg-white); border-radius: 8px;">
+        <h2 style="text-align: center; margin-bottom: 5px;">Criar Nova Conta</h2>
+        <p style="text-align: center; color: var(--text-muted); margin-bottom: 25px; font-size: 0.9rem;">Preencha os dados abaixo para se cadastrar.</p>
+        
+        <form id="cadastroForm">
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 500; font-size: 0.9rem;">Nome Completo</label>
+                <input type="text" name="nome" class="search-input" placeholder="Ex: João da Silva" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 4px;" required>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 500; font-size: 0.9rem;">E-mail</label>
+                <input type="email" name="email" class="search-input" placeholder="seu@email.com" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 4px;" required>
+            </div>
+            
+            <div style="margin-bottom: 15px;">
+                <label style="font-weight: 500; font-size: 0.9rem;">Senha</label>
+                <input type="password" name="senha" class="search-input" placeholder="Crie uma senha forte" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 4px;" required>
+            </div>
+
+            <div style="margin-bottom: 25px;">
+                <label style="font-weight: 500; font-size: 0.9rem;">Confirmar Senha</label>
+                <input type="password" name="confirma_senha" class="search-input" placeholder="Repita a senha" style="width: 100%; padding: 10px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 4px;" required>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="width: 100%; padding: 12px; font-size: 1rem;">Finalizar Cadastro</button>
+        </form>
+        
+        <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+            Já tem uma conta? <a href="login.html" style="color: var(--primary-color); text-decoration: none; font-weight: 600;">Entrar</a>
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var senha = this.querySelector('[name="senha"]').value;
+            var confirma = this.querySelector('[name="confirma_senha"]').value;
+            if (senha !== confirma) {
+                alert('As senhas não coincidem!');
+                return;
+            }
+            alert('Cadastro realizado com sucesso! (Demonstração)');
+        });
+    </script>
+</body>
+</html>

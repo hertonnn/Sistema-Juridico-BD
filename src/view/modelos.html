@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modelos de Documentos | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html">Processos</a>
+                <a href="jurisprudencia.html">Jurisprudência</a>
+                <a href="advogados.html">Advogados</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="content-section container">
+        <div class="action-bar">
+            <a href="index.html" class="btn btn-outline btn-sm">&larr; Voltar ao Início</a>
+        </div>
+
+        <div class="page-header">
+            <h2>Modelos e Peças Judiciais</h2>
+            <p>Banco de petições, contratos e documentos formatados de acordo com a legislação vigente.</p>
+        </div>
+
+        <div class="cards-grid">
+            <div class="card">
+                <span class="profile-tag">Direito Civil</span>
+                <h3 style="margin-top: 10px; margin-bottom: 5px;">Petição Inicial - Danos Morais</h3>
+                <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 20px;">Modelo padrão para ação de indenização por danos morais (Rito Juizado Especial).</p>
+                <button class="btn btn-outline btn-sm btn-copy" data-texto="EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DE DIREITO DO JUIZADO ESPECIAL CÍVEL DA COMARCA DE...&#10;&#10;REQUERENTE: [Nome Completo], [Nacionalidade], [Estado Civil], [Profissão], portador do RG nº... e inscrito no CPF sob o nº..., residente e domiciliado na...&#10;&#10;REQUERIDO: [Nome/Razão Social], pessoa jurídica de direito privado, inscrita no CNPJ sob o nº..., com sede na...&#10;&#10;DOS FATOS...&#10;DOS DIREITOS...&#10;DOS PEDIDOS: Ante o exposto, requer a condenação do Requerido ao pagamento de indenização por danos morais no valor de R$..." style="width: 100%; transition: all 0.2s ease-in-out;">Copiar Texto</button>
+            </div>
+            <div class="card">
+                <span class="profile-tag">Contratos</span>
+                <h3 style="margin-top: 10px; margin-bottom: 5px;">Contrato de Prestação de Serviços</h3>
+                <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 20px;">Contrato genérico com cláusulas de proteção de dados (LGPD) e foro.</p>
+                <button class="btn btn-outline btn-sm btn-copy" data-texto="CONTRATO DE PRESTAÇÃO DE SERVIÇOS&#10;&#10;CONTRATANTE: [Nome ou Razão Social], inscrito no CPF/CNPJ sob o nº..., residente ou sediado em...&#10;&#10;CONTRATADO: [Nome ou Razão Social], inscrito no CPF/CNPJ sob o nº..., residente ou sediado em...&#10;&#10;CLÁUSULA PRIMEIRA - DO OBJETO: O presente contrato tem por objeto a prestação de serviços de...&#10;&#10;CLÁUSULA SEGUNDA - DA PROTEÇÃO DE DADOS (LGPD): As partes se comprometem a tratar todos os dados pessoais a que tiverem acesso em conformidade com a Lei nº 13.709/2018 (Lei Geral de Proteção de Dados)..." style="width: 100%; transition: all 0.2s ease-in-out;">Copiar Texto</button>
+            </div>
+            <div class="card">
+                <span class="profile-tag">Direito de Família</span>
+                <h3 style="margin-top: 10px; margin-bottom: 5px;">Ação de Divórcio Consensual</h3>
+                <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 20px;">Peça conjunta para divórcio com partilha de bens e guarda de menores.</p>
+                <button class="btn btn-outline btn-sm btn-copy" data-texto="EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DE DIREITO DA VARA DE FAMÍLIA E SUCESSÕES DA COMARCA DE...&#10;&#10;REQUERENTES: [Nome do Cônjuge 1] e [Nome do Cônjuge 2], ambos devidamente qualificados, por seu advogado comum...&#10;&#10;DOS FATOS: Os Requerentes contraíram matrimônio sob o regime de... Não pretendendo mais manter a vida em comum, deliberaram de comum acordo pelo divórcio consensual...&#10;&#10;DA GUARDA E DOS ALIMENTOS... &#10;DA PARTILHA DE BENS..." style="width: 100%; transition: all 0.2s ease-in-out;">Copiar Texto</button>
+            </div>
+            <div class="card">
+                <span class="profile-tag">Direito Trabalhista</span>
+                <h3 style="margin-top: 10px; margin-bottom: 5px;">Reclamação Trabalhista</h3>
+                <p class="text-muted" style="font-size: 0.9rem; margin-bottom: 20px;">Modelo com pedidos de horas extras, adicional noturno e verbas rescisórias.</p>
+                <button class="btn btn-outline btn-sm btn-copy" data-texto="EXCELENTÍSSIMO SENHOR DOUTOR JUIZ DA VARA DO TRABALHO DE...&#10;&#10;RECLAMANTE: [Nome Completo], CTPS nº..., série..., qualificado nos autos...&#10;&#10;RECLAMADO: [Razão Social da Empresa], inscrita no CNPJ sob o nº...&#10;&#10;DO CONTRATO DE TRABALHO: O Reclamante foi admitido em [Data] para exercer a função de... sendo dispensado sem justa causa em [Data]...&#10;&#10;DAS HORAS EXTRAS: O Reclamante cumpria jornada de trabalho das... às... sem a devida contraprestação..." style="width: 100%; transition: all 0.2s ease-in-out;">Copiar Texto</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const botoes = document.querySelectorAll('.btn-copy');
+
+        botoes.forEach(botao => {
+            botao.addEventListener('click', async () => {
+                const texto = botao.getAttribute('data-texto');
+
+                try {
+                    await navigator.clipboard.writeText(texto);
+
+                    const textoOriginal = botao.innerText;
+
+                    botao.innerText = 'Copiado! ✓';
+                    botao.style.backgroundColor = '#e6f4ea';
+                    botao.style.color = '#137333';
+                    botao.style.borderColor = '#137333';
+
+                    botao.blur();
+
+                    setTimeout(() => {
+                        botao.innerText = textoOriginal;
+                        botao.style.backgroundColor = '';
+                        botao.style.color = '';
+                        botao.style.borderColor = '';
+                    }, 2000);
+
+                } catch (err) {
+                    console.error('Erro ao copiar o documento: ', err);
+                    alert('Ops! Não foi possível copiar o texto automaticamente.');
+                }
+            });
+        });
+    });
+    </script>
+
+</body>
+</html>

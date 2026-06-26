@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acórdão na Íntegra | JusDigital</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .texto-acordao {
+            white-space: pre-wrap;
+            background-color: #f9fafb;
+            padding: 25px;
+            border-radius: 6px;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            font-family: 'Times New Roman', Times, serif;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="top-header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">
+                <img src="assets/img/logo-sistema.svg" alt="Logo Sistema Jurídico" class="logo-img" onerror="this.style.display='none';">
+                <span class="logo-text">Jus<strong>Digital</strong></span>
+            </a>
+            <nav class="main-nav">
+                <a href="processos.html">Processos</a>
+                <a href="jurisprudencia.html" class="active">Jurisprudência</a>
+                <a href="advogados.html">Advogados</a>
+            </nav>
+            <div class="user-actions">
+                <a href="login.html" class="btn btn-outline">Entrar</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="content-section container">
+        <div class="action-bar">
+            <a href="jurisprudencia.html" class="btn btn-outline btn-sm">&larr; Voltar para Jurisprudência</a>
+        </div>
+
+        <div id="acordao-container"></div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 JusDigital - Sistema Jurídico. Todos os direitos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        var acordaos = {
+            1: {
+                titulo: "Apelação Cível nº 101239-44 - Direito do Consumidor",
+                tribunal: "TJSC - Terceira Câmara de Direito Civil",
+                relator: "Des. Ricardo Volpato",
+                data: "14/05/2026",
+                ementa: "RESPONSABILIDADE CÍVIL. INSTITUIÇÃO FINANCEIRA. NEGATIVAÇÃO INDEVIDA NOS ÓRGÃOS DE PROTEÇÃO AO CRÉDITO. DANO MORAL CONFIGURADO IN RE IPSA. QUANTUM INDENIZATÓRIO MANTIDO. RECURSO DESPROVIDO.",
+                texto_integral: "VISTOS, relatados e discutidos estes autos de Apelação Cível n. 101239-44...\n\nACORDAM, em Terceira Câmara de Direito Civil, por votação unânime, conhecer do recurso e negar-lhe provimento.\n\n1. RELATÓRIO\nTrata-se de apelação cível interposta por Banco Sul S/A contra sentença que julgou procedentes os pedidos iniciais formulados por Carlos Eduardo Souza, condenando a instituição ao pagamento de indenização por danos morais no valor de R$ 10.000,00.\n\n2. VOTO\nO recurso é tempestivo e preenche os requisitos de admissibilidade. No mérito, restou incontroverso que a negativação do nome do autor ocorreu indevidamente, uma vez que a dívida já havia sido quitada.\n\nDiante do exposto, o voto é no sentido de manter a sentença irretocável."
+            },
+            2: {
+                titulo: "Recurso Inominado nº 500344-12 - Direito Digital",
+                tribunal: "Turma Recursal dos Juizados Especiais",
+                relator: "Dra. Cláudia Maria",
+                data: "02/06/2026",
+                ementa: "AÇÃO INDENIZATÓRIA. VAZAMENTO DE DADOS PESSOAIS. FALHA NA SEGURANÇA DA PLATAFORMA CONFIGURADA. INFRAÇÃO À LEI GERAL DE PROTEÇÃO DE DADOS (LGPD). DEVER DE REPARAR OS DANOS EXTRAPATRIMONIAIS.",
+                texto_integral: "VISTOS, relatados e discutidos estes autos...\n\nACORDAM, os Juízes da Turma Recursal, por unanimidade, em dar provimento ao recurso da parte autora.\n\n1. RELATÓRIO\nA parte autora ajuizou ação indenizatória em face de Tech Soluções Ltda., alegando que seus dados pessoais (CPF, endereço e telefone) foram expostos devido a uma falha de segurança no banco de dados da ré.\n\n2. VOTO\nAplica-se ao caso a Lei Geral de Proteção de Dados (LGPD). A empresa ré não demonstrou ter adotado as medidas de segurança adequadas para proteger os dados sob sua guarda. O dano moral, neste caso, prescinde de prova de prejuízo concreto, sendo inerente à própria exposição indevida (in re ipsa).\n\nAnte o exposto, condena-se a ré ao pagamento de R$ 5.000,00 a título de danos morais."
+            }
+        };
+
+        var params = new URLSearchParams(window.location.search);
+        var id = params.get('id');
+        var container = document.getElementById('acordao-container');
+
+        if (id && acordaos[id]) {
+            var a = acordaos[id];
+            container.innerHTML = '<div class="process-details-card">' +
+                '<div class="process-header-info" style="border-bottom: none; padding-bottom: 0; margin-bottom: 10px;">' +
+                    '<div><h2>' + a.titulo + '</h2></div>' +
+                '</div>' +
+                '<div class="juris-meta" style="margin-bottom: 25px;">' +
+                    '<span><strong>Tribunal:</strong> ' + a.tribunal + '</span> | ' +
+                    '<span><strong>Relator(a):</strong> ' + a.relator + '</span> | ' +
+                    '<span><strong>Data do Julgamento:</strong> ' + a.data + '</span>' +
+                '</div>' +
+                '<p class="juris-ementa" style="background: #eef2ff; padding: 15px; border-left: 4px solid var(--primary-color); border-radius: 4px;">' +
+                    '<strong>EMENTA:</strong> <br>' + a.ementa +
+                '</p>' +
+                '<hr class="divider">' +
+                '<h3>Inteiro Teor do Acórdão</h3>' +
+                '<div class="texto-acordao">' + a.texto_integral + '</div>' +
+            '</div>';
+        } else {
+            container.innerHTML = '<div class="process-details-card">' +
+                '<h2>Acórdão não encontrado.</h2>' +
+                '<p>O documento solicitado não existe ou foi removido do nosso sistema.</p>' +
+            '</div>';
+        }
+    </script>
+</body>
+</html>

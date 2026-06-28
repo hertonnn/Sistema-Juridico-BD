@@ -37,38 +37,15 @@
                 <thead>
                     <tr>
                         <th>Nº do Processo</th>
-                        <th>Autor (Requerente)</th>
-                        <th>Réu (Requerido)</th>
-                        <th>Magistrado</th>
+                        <th>Tipo</th>
+                        <th>Assunto</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>5002314-82.2026.8.24.0038</strong></td>
-                        <td>Carlos Eduardo Souza</td>
-                        <td>Banco Sul S/A</td>
-                        <td>Dr. Alexandre Morais</td>
-                        <td><span class="status-badge status-progress">Em Andamento</span></td>
-                        <td><a href="visualizar_processo.html?id=1" class="btn btn-primary btn-sm">Visualizar</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>0312455-19.2025.8.24.0038</strong></td>
-                        <td>Mariana Alcantara</td>
-                        <td>Estado de Santa Catarina</td>
-                        <td>Dra. Helena Rios</td>
-                        <td><span class="status-badge status-success">Julgado</span></td>
-                        <td><a href="visualizar_processo.html?id=2" class="btn btn-primary btn-sm">Visualizar</a></td>
-                    </tr>
-                    <tr>
-                        <td><strong>5019842-11.2026.8.24.0038</strong></td>
-                        <td>Roberto Alencar</td>
-                        <td>Tech Soluções Ltda</td>
-                        <td>Dr. Alexandre Morais</td>
-                        <td><span class="status-badge status-warning">Suspenso</span></td>
-                        <td><a href="visualizar_processo.html?id=3" class="btn btn-primary btn-sm">Visualizar</a></td>
-                    </tr>
+                <tbody id="processos-tbody">
+                    <!-- Preenchido via JavaScript -->
+                    <tr><td colspan="5" style="text-align: center;">Carregando...</td></tr>
                 </tbody>
             </table>
         </div>
@@ -79,6 +56,43 @@
             <p>&copy; 2026 JusDigital - Sistema Jurídico. Todos os direitos reservados.</p>
         </div>
     </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/processos')
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('processos-tbody');
+                    tbody.innerHTML = ''; // Limpa o "Carregando..."
+                    
+                    if(data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">Nenhum processo encontrado.</td></tr>';
+                        return;
+                    }
+                    
+                    data.forEach(p => {
+                        let statusClass = "status-progress";
+                        if(p.status && p.status.toLowerCase().includes("encerrado") || p.status.toLowerCase().includes("julgado")) statusClass = "status-success";
+                        if(p.status && p.status.toLowerCase().includes("suspenso")) statusClass = "status-warning";
+                        
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td><strong>${p.numero || 'N/A'}</strong></td>
+                            <td>${p.tipo || '-'}</td>
+                            <td>${p.assunto || '-'}</td>
+                            <td><span class="status-badge ${statusClass}">${p.status || '-'}</span></td>
+                            <td><a href="visualizar_processo.html?id=${p.id}" class="btn btn-primary btn-sm">Visualizar</a></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+                })
+                .catch(error => {
+                    console.error('Erro ao buscar processos:', error);
+                    const tbody = document.getElementById('processos-tbody');
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: red;">Erro ao carregar dados.</td></tr>';
+                });
+        });
+    </script>
 
 </body>
 </html>

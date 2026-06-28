@@ -60,13 +60,13 @@ O Padrão de arquitetura usado foi o MVC (Model-View-Controller). O MVC é um pa
 
 Para a criação da API foram requisitados apenas no máximo 5 tabelas do banco de dados relacionadas. Com o banco de dados(disponibilizado nos arquivos) criado, execute apenas o comando para rodar caso não tenha feito modificações prévias no projeto.
 
-- Empacota os .jar em .class
-
-	jar cfm Run.jar MANIFEST.MF -C out .
-
 - Compila 
 
-	javac src/*.java
+	javac -d out src/*.java src/bean/*.java src/controller/*.java src/db/*.java src/model/*.java
+
+- Empacota os .class em .jar
+
+	jar cfm Run.jar MANIFEST.MF -C out .
 
 - Roda
 	

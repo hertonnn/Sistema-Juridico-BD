@@ -55,52 +55,55 @@
     </footer>
 
     <script>
-        var acordaos = {
-            1: {
-                titulo: "Apelação Cível nº 101239-44 - Direito do Consumidor",
-                tribunal: "TJSC - Terceira Câmara de Direito Civil",
-                relator: "Des. Ricardo Volpato",
-                data: "14/05/2026",
-                ementa: "RESPONSABILIDADE CÍVIL. INSTITUIÇÃO FINANCEIRA. NEGATIVAÇÃO INDEVIDA NOS ÓRGÃOS DE PROTEÇÃO AO CRÉDITO. DANO MORAL CONFIGURADO IN RE IPSA. QUANTUM INDENIZATÓRIO MANTIDO. RECURSO DESPROVIDO.",
-                texto_integral: "VISTOS, relatados e discutidos estes autos de Apelação Cível n. 101239-44...\n\nACORDAM, em Terceira Câmara de Direito Civil, por votação unânime, conhecer do recurso e negar-lhe provimento.\n\n1. RELATÓRIO\nTrata-se de apelação cível interposta por Banco Sul S/A contra sentença que julgou procedentes os pedidos iniciais formulados por Carlos Eduardo Souza, condenando a instituição ao pagamento de indenização por danos morais no valor de R$ 10.000,00.\n\n2. VOTO\nO recurso é tempestivo e preenche os requisitos de admissibilidade. No mérito, restou incontroverso que a negativação do nome do autor ocorreu indevidamente, uma vez que a dívida já havia sido quitada.\n\nDiante do exposto, o voto é no sentido de manter a sentença irretocável."
-            },
-            2: {
-                titulo: "Recurso Inominado nº 500344-12 - Direito Digital",
-                tribunal: "Turma Recursal dos Juizados Especiais",
-                relator: "Dra. Cláudia Maria",
-                data: "02/06/2026",
-                ementa: "AÇÃO INDENIZATÓRIA. VAZAMENTO DE DADOS PESSOAIS. FALHA NA SEGURANÇA DA PLATAFORMA CONFIGURADA. INFRAÇÃO À LEI GERAL DE PROTEÇÃO DE DADOS (LGPD). DEVER DE REPARAR OS DANOS EXTRAPATRIMONIAIS.",
-                texto_integral: "VISTOS, relatados e discutidos estes autos...\n\nACORDAM, os Juízes da Turma Recursal, por unanimidade, em dar provimento ao recurso da parte autora.\n\n1. RELATÓRIO\nA parte autora ajuizou ação indenizatória em face de Tech Soluções Ltda., alegando que seus dados pessoais (CPF, endereço e telefone) foram expostos devido a uma falha de segurança no banco de dados da ré.\n\n2. VOTO\nAplica-se ao caso a Lei Geral de Proteção de Dados (LGPD). A empresa ré não demonstrou ter adotado as medidas de segurança adequadas para proteger os dados sob sua guarda. O dano moral, neste caso, prescinde de prova de prejuízo concreto, sendo inerente à própria exposição indevida (in re ipsa).\n\nAnte o exposto, condena-se a ré ao pagamento de R$ 5.000,00 a título de danos morais."
-            }
-        };
-
         var params = new URLSearchParams(window.location.search);
         var id = params.get('id');
         var container = document.getElementById('acordao-container');
 
-        if (id && acordaos[id]) {
-            var a = acordaos[id];
-            container.innerHTML = '<div class="process-details-card">' +
-                '<div class="process-header-info" style="border-bottom: none; padding-bottom: 0; margin-bottom: 10px;">' +
-                    '<div><h2>' + a.titulo + '</h2></div>' +
-                '</div>' +
-                '<div class="juris-meta" style="margin-bottom: 25px;">' +
-                    '<span><strong>Tribunal:</strong> ' + a.tribunal + '</span> | ' +
-                    '<span><strong>Relator(a):</strong> ' + a.relator + '</span> | ' +
-                    '<span><strong>Data do Julgamento:</strong> ' + a.data + '</span>' +
-                '</div>' +
-                '<p class="juris-ementa" style="background: #eef2ff; padding: 15px; border-left: 4px solid var(--primary-color); border-radius: 4px;">' +
-                    '<strong>EMENTA:</strong> <br>' + a.ementa +
-                '</p>' +
-                '<hr class="divider">' +
-                '<h3>Inteiro Teor do Acórdão</h3>' +
-                '<div class="texto-acordao">' + a.texto_integral + '</div>' +
-            '</div>';
+        if (!id) {
+            container.innerHTML = '<div class="process-details-card"><h2>Item não especificado.</h2></div>';
         } else {
-            container.innerHTML = '<div class="process-details-card">' +
-                '<h2>Acórdão não encontrado.</h2>' +
-                '<p>O documento solicitado não existe ou foi removido do nosso sistema.</p>' +
-            '</div>';
+            container.innerHTML = '<div style="text-align:center; padding: 40px;">Carregando detalhes...</div>';
+            fetch('/api/lei?id=' + id)
+                .then(res => {
+                    if (!res.ok) throw new Error('Not found');
+                    return res.json();
+                })
+                .then(lei => {
+                    var processosHtml = '';
+                    if (lei.processos && lei.processos.length > 0) {
+                        processosHtml = '<ul style="list-style: none; padding: 0;">';
+                        lei.processos.forEach(p => {
+                            processosHtml += '<li style="margin-bottom: 15px; padding: 15px; background: #fff; border: 1px solid #e5e7eb; border-radius: 8px;">' +
+                                '<strong><a href="visualizar_processo.html?id=' + p.id + '">' + p.numero + '</a></strong> - ' + p.tipo + '<br>' +
+                                '<span style="color: var(--text-muted); font-size: 0.95em;">Citação base: ' + (p.artigo || 'Geral') + '</span>' +
+                            '</li>';
+                        });
+                        processosHtml += '</ul>';
+                    } else {
+                        processosHtml = '<p style="color: var(--text-muted);">Nenhum processo referenciando esta base legal no momento.</p>';
+                    }
+
+                    container.innerHTML = '<div class="process-details-card">' +
+                        '<div class="process-header-info" style="border-bottom: none; padding-bottom: 0; margin-bottom: 10px;">' +
+                            '<div><h2>' + (lei.titulo || 'Base Legal') + '</h2></div>' +
+                        '</div>' +
+                        '<div class="juris-meta" style="margin-bottom: 25px;">' +
+                            '<span><strong>Tipo:</strong> Legislação / Jurisprudência</span>' +
+                        '</div>' +
+                        '<p class="juris-ementa" style="background: #eef2ff; padding: 15px; border-left: 4px solid var(--primary-color); border-radius: 4px;">' +
+                            '<strong>RESUMO / DESCRIÇÃO:</strong> <br>' + (lei.descricao || 'Não informado.') +
+                        '</p>' +
+                        '<hr class="divider">' +
+                        '<h3>Processos no Sistema que Citam Esta Base</h3>' +
+                        '<div style="margin-top: 20px;">' + processosHtml + '</div>' +
+                    '</div>';
+                })
+                .catch(err => {
+                    container.innerHTML = '<div class="process-details-card">' +
+                        '<h2>Registro não encontrado.</h2>' +
+                        '<p>O documento solicitado não existe ou erro no servidor.</p>' +
+                    '</div>';
+                });
         }
     </script>
 </body>

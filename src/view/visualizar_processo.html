@@ -41,54 +41,75 @@
     </footer>
 
     <script>
-        var processos = {
-            1: {num: "5002314-82.2026.8.24.0038", autor: "Carlos Eduardo Souza", reu: "Banco Sul S/A", juiz: "Dr. Alexandre Morais", status: "Em Andamento", classe: "status-progress", vara: "3ª Vara Cível", data_inicio: "10/01/2026"},
-            2: {num: "0312455-19.2025.8.24.0038", autor: "Mariana Alcantara", reu: "Estado de Santa Catarina", juiz: "Dra. Helena Rios", status: "Julgado", classe: "status-success", vara: "1ª Vara da Fazenda Pública", data_inicio: "15/03/2025"},
-            3: {num: "5019842-11.2026.8.24.0038", autor: "Roberto Alencar", reu: "Tech Soluções Ltda", juiz: "Dr. Alexandre Morais", status: "Suspenso", classe: "status-warning", vara: "3ª Vara Cível", data_inicio: "05/02/2026"}
-        };
-
         var params = new URLSearchParams(window.location.search);
         var id = params.get('id');
         var container = document.getElementById('processo-container');
 
-        if (id && processos[id]) {
-            var p = processos[id];
-            container.innerHTML = '<div class="process-details-card">' +
-                '<div class="process-header-info">' +
-                    '<div>' +
-                        '<h2>Processo Nº ' + p.num + '</h2>' +
-                        '<p class="text-muted">' + p.vara + ' - Magistrado(a): ' + p.juiz + '</p>' +
-                    '</div>' +
-                    '<div>' +
-                        '<span class="status-badge ' + p.classe + '">' + p.status + '</span>' +
-                    '</div>' +
-                '</div>' +
-                '<div class="process-parties">' +
-                    '<p><strong>Autor (Requerente):</strong> ' + p.autor + '</p>' +
-                    '<p><strong>Réu (Requerido):</strong> ' + p.reu + '</p>' +
-                    '<p><strong>Data de Autuação:</strong> ' + p.data_inicio + '</p>' +
-                '</div>' +
-                '<hr class="divider">' +
-                '<h3>Histórico de Trâmites</h3>' +
-                '<div class="timeline">' +
-                    '<div class="timeline-item">' +
-                        '<span class="timeline-date">Hoje</span>' +
-                        '<p>Conclusos para Despacho ao Juiz.</p>' +
-                    '</div>' +
-                    '<div class="timeline-item">' +
-                        '<span class="timeline-date">Há 5 dias</span>' +
-                        '<p>Juntada de Petição de Manifestação da Parte Autora.</p>' +
-                    '</div>' +
-                    '<div class="timeline-item">' +
-                        '<span class="timeline-date">' + p.data_inicio + '</span>' +
-                        '<p>Distribuição do processo por Sorteio.</p>' +
-                    '</div>' +
-                '</div>' +
-            '</div>';
+        if (id) {
+            container.innerHTML = '<div style="text-align:center; padding: 20px;">Carregando dados do processo...</div>';
+            
+            fetch('/api/processo?id=' + id)
+                .then(response => {
+                    if(!response.ok) throw new Error('Processo não encontrado');
+                    return response.json();
+                })
+                .then(p => {
+                    let statusClass = "status-progress";
+                    if(p.status && (p.status.toLowerCase().includes("encerrado") || p.status.toLowerCase().includes("julgado") || p.status.toLowerCase().includes("concluído"))) statusClass = "status-success";
+                    if(p.status && p.status.toLowerCase().includes("suspenso")) statusClass = "status-warning";
+                    
+                    let partesHtml = '';
+                    if(p.partes && p.partes.length > 0) {
+                        p.partes.forEach(parte => {
+                            partesHtml += '<p><strong>' + parte.tipo + ':</strong> ' + parte.nome + '</p>';
+                        });
+                    } else {
+                        partesHtml = '<p>Nenhuma parte vinculada.</p>';
+                    }
+
+                    let tramitesHtml = '';
+                    if(p.tramites && p.tramites.length === 0) {
+                        tramitesHtml = '<p style="color: #666;">Nenhum trâmite registrado até o momento.</p>';
+                    } else {
+                        p.tramites.forEach(t => {
+                            tramitesHtml += '<div class="timeline-item">' +
+                                '<span class="timeline-date">' + t.data + '</span>' +
+                                '<p><strong>' + t.tipo + ':</strong> ' + t.descricao + '</p>' +
+                            '</div>';
+                        });
+                    }
+
+                    container.innerHTML = '<div class="process-details-card">' +
+                        '<div class="process-header-info">' +
+                            '<div>' +
+                                '<h2>Processo Nº ' + (p.numero || 'N/A') + '</h2>' +
+                                '<p class="text-muted">' + (p.vara || 'Vara não identificada') + ' - Assunto: ' + (p.assunto || 'N/A') + '</p>' +
+                            '</div>' +
+                            '<div>' +
+                                '<span class="status-badge ' + statusClass + '">' + (p.status || 'Desconhecido') + '</span>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="process-parties">' +
+                            partesHtml +
+                            '<p><strong>Data de Início:</strong> ' + (p.data_inicio || 'N/A') + '</p>' +
+                        '</div>' +
+                        '<hr class="divider">' +
+                        '<h3>Histórico de Trâmites</h3>' +
+                        '<div class="timeline">' +
+                            tramitesHtml +
+                        '</div>' +
+                    '</div>';
+                })
+                .catch(error => {
+                    container.innerHTML = '<div class="process-details-card">' +
+                        '<h2>Processo não encontrado.</h2>' +
+                        '<p>O processo solicitado não existe no banco de dados ou ocorreu um erro na busca.</p>' +
+                    '</div>';
+                });
         } else {
             container.innerHTML = '<div class="process-details-card">' +
-                '<h2>Processo não encontrado.</h2>' +
-                '<p>O número de processo solicitado não existe no nosso sistema.</p>' +
+                '<h2>ID não fornecido.</h2>' +
+                '<p>Por favor, volte e selecione um processo na lista de processos.</p>' +
             '</div>';
         }
     </script>

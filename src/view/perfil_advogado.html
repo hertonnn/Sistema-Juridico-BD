@@ -41,51 +41,61 @@
     </footer>
 
     <script>
-        var advogados = {
-            1: {nome: "Dr. Adriano Silva", oab: "OAB/SC 45.123", especialidade: "Direito Civil e Contratos", email: "adriano@jusdigital.adv.br", telefone: "(47) 99999-1111", bio: "Especialista em contencioso cível estratégico e elaboração de contratos complexos. Atua há mais de 10 anos garantindo a segurança jurídica de empresas e pessoas físicas em negociações de alto risco.", formacao: "Mestre em Direito Civil pela UFSC.\nPós-graduado em Direito Contratual."},
-            2: {nome: "Dra. Júlia Llorente", oab: "OAB/SC 51.984", especialidade: "Direito Digital e LGPD", email: "julia@jusdigital.adv.br", telefone: "(47) 99999-2222", bio: "Focada na interseção entre tecnologia e direito. Referência regional na adequação de empresas à Lei Geral de Proteção de Dados (LGPD) e na atuação em litígios envolvendo crimes cibernéticos e vazamento de dados.", formacao: "Especialista em Direito Digital pelo Insper.\nCertificação Internacional EXIN DPO."},
-            3: {nome: "Dr. Herton Silveira", oab: "OAB/SC 38.741", especialidade: "Direito Público e Administrativo", email: "herton@jusdigital.adv.br", telefone: "(47) 99999-3333", bio: "Ampla experiência em licitações, contratos administrativos e defesa de servidores públicos. Atuação incisiva perante Tribunais de Contas e na defesa contra processos de improbidade administrativa.", formacao: "Doutor em Direito Administrativo pela USP.\nEx-Procurador Municipal."}
-        };
-
         var params = new URLSearchParams(window.location.search);
         var id = params.get('id');
         var container = document.getElementById('perfil-container');
 
-        if (id && advogados[id]) {
-            var adv = advogados[id];
-            container.innerHTML = '<div class="profile-layout">' +
-                '<aside class="profile-sidebar shadow-sm">' +
-                    '<div class="profile-photo-placeholder">⚖️</div>' +
-                    '<h2 class="profile-name">' + adv.nome + '</h2>' +
-                    '<p class="profile-oab">' + adv.oab + '</p>' +
-                    '<div class="profile-contact">' +
-                        '<p>📧 ' + adv.email + '</p>' +
-                        '<p>📱 ' + adv.telefone + '</p>' +
-                    '</div>' +
-                '</aside>' +
-                '<section class="profile-main shadow-sm">' +
-                    '<div class="profile-section">' +
-                        '<h3>Sobre o Profissional</h3>' +
-                        '<p>' + adv.bio + '</p>' +
-                    '</div>' +
-                    '<hr class="divider">' +
-                    '<div class="profile-section">' +
-                        '<h3>Áreas de Atuação</h3>' +
-                        '<span class="profile-tag">' + adv.especialidade + '</span>' +
-                        '<span class="profile-tag">Consultoria Jurídica</span>' +
-                        '<span class="profile-tag">Contencioso</span>' +
-                    '</div>' +
-                    '<hr class="divider">' +
-                    '<div class="profile-section">' +
-                        '<h3>Formação Acadêmica</h3>' +
-                        '<p style="white-space: pre-line; color: var(--text-muted);">' + adv.formacao + '</p>' +
-                    '</div>' +
-                '</section>' +
-            '</div>';
+        if (!id) {
+            container.innerHTML = '<div class="process-details-card"><h2>Advogado não especificado.</h2></div>';
         } else {
-            container.innerHTML = '<div class="process-details-card">' +
-                '<h2>Advogado não encontrado.</h2>' +
-            '</div>';
+            container.innerHTML = '<div style="text-align:center; padding: 40px;">Carregando dados do advogado...</div>';
+            fetch('/api/advogado?id=' + id)
+                .then(res => {
+                    if (!res.ok) throw new Error('Not found');
+                    return res.json();
+                })
+                .then(adv => {
+                    var processosHtml = '';
+                    if (adv.processos && adv.processos.length > 0) {
+                        processosHtml = '<ul style="list-style: none; padding: 0;">';
+                        adv.processos.forEach(p => {
+                            processosHtml += '<li style="margin-bottom: 10px; padding: 10px; background: var(--bg-color); border-radius: 8px;">' +
+                                '<strong><a href="visualizar_processo.html?id=' + p.id + '">' + p.numero + '</a></strong><br>' +
+                                '<span style="color: var(--text-muted); font-size: 0.9em;">' + p.tipo + '</span>' +
+                            '</li>';
+                        });
+                        processosHtml += '</ul>';
+                    } else {
+                        processosHtml = '<p style="color: var(--text-muted);">Nenhum processo vinculado no momento.</p>';
+                    }
+
+                    container.innerHTML = '<div class="profile-layout">' +
+                        '<aside class="profile-sidebar shadow-sm">' +
+                            '<div class="profile-photo-placeholder">⚖️</div>' +
+                            '<h2 class="profile-name">' + adv.nome + '</h2>' +
+                            '<p class="profile-oab">' + adv.oab + '</p>' +
+                            '<div class="profile-contact">' +
+                                '<p>📄 CPF/CNPJ: ' + (adv.cpf || 'Não informado') + '</p>' +
+                            '</div>' +
+                        '</aside>' +
+                        '<section class="profile-main shadow-sm">' +
+                            '<div class="profile-section">' +
+                                '<h3>Área de Atuação</h3>' +
+                                '<span class="profile-tag">' + (adv.area || 'Geral') + '</span>' +
+                            '</div>' +
+                            '<hr class="divider">' +
+                            '<div class="profile-section">' +
+                                '<h3>Processos Vinculados</h3>' +
+                                processosHtml +
+                            '</div>' +
+                        '</section>' +
+                    '</div>';
+                })
+                .catch(err => {
+                    container.innerHTML = '<div class="process-details-card">' +
+                        '<h2>Advogado não encontrado ou erro no servidor.</h2>' +
+                    '</div>';
+                });
         }
     </script>
 </body>

@@ -67,13 +67,16 @@ public class Principal {
                             break;
                     case 19: new TramiteController().removerTramite(con);
                             break;
+                    // WEB
+                    case 20: ServidorWeb.iniciar(con);
+                            break;
                 }
             }catch(SQLException ex) {
                 //ex.printStackTrace();
                 System.out.println(ex.getMessage());
                 continue;
             }
-        } while(op>0 && op<20);  
+        } while(op>0 && op<=20);  
         con.close();
     }    
     
@@ -107,6 +110,9 @@ public class Principal {
         System.out.println(" 17  - Inserir um novo trâmite");
         System.out.println(" 18  - Exibir todos os trâmites");
         System.out.println(" 19  - Remover um trâmite");
+        System.out.println("--------------------------------------------------------");
+        System.out.println(" WEB");
+        System.out.println(" 20  - Iniciar Servidor Web (Interface Gráfica)");
         System.out.println("========================================================");
         System.out.println("Digite qualquer outro valor para sair");
         System.out.print("Sua opção: ");

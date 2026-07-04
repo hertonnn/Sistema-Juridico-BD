@@ -42,16 +42,40 @@
     </div>
 
     <script>
-        document.getElementById('cadastroForm').addEventListener('submit', function(e) {
+        document.getElementById('cadastroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            var nome = this.querySelector('[name="nome"]').value;
+            var email = this.querySelector('[name="email"]').value;
             var senha = this.querySelector('[name="senha"]').value;
             var confirma = this.querySelector('[name="confirma_senha"]').value;
             if (senha !== confirma) {
                 alert('As senhas não coincidem!');
                 return;
             }
-            alert('Cadastro realizado com sucesso! (Demonstração)');
+            
+            const formData = new URLSearchParams();
+            formData.append('nome', nome);
+            formData.append('email', email);
+            formData.append('senha', senha);
+            
+            try {
+                const response = await fetch('/api/cadastro', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: formData.toString()
+                });
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso!');
+                    window.location.href = 'login.html';
+                } else {
+                    const text = await response.text();
+                    alert('Erro no cadastro: ' + text);
+                }
+            } catch (err) {
+                alert('Erro na comunicação com o servidor.');
+            }
         });
     </script>
+    <script src="auth.js"></script>
 </body>
 </html>

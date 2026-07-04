@@ -94,11 +94,70 @@
                             '<p><strong>Data de Início:</strong> ' + (p.data_inicio || 'N/A') + '</p>' +
                         '</div>' +
                         '<hr class="divider">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center;">' +
+                            '<h3>Resumo Inteligente (IA)</h3>' +
+                            '<button id="btn-gerar-resumo" class="btn btn-primary btn-sm">Gerar Resumo com IA</button>' +
+                        '</div>' +
+                        '<div id="resumo-ia-container" style="display:none; margin-top: 15px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">' +
+                            '<div id="resumo-ia-content"></div>' +
+                        '</div>' +
+                        '<hr class="divider">' +
                         '<h3>Histórico de Trâmites</h3>' +
                         '<div class="timeline">' +
                             tramitesHtml +
                         '</div>' +
                     '</div>';
+
+                    // Lógica para gerar o resumo
+                    document.getElementById('btn-gerar-resumo').addEventListener('click', function() {
+                        const btn = this;
+                        const resumoContainer = document.getElementById('resumo-ia-container');
+                        const resumoContent = document.getElementById('resumo-ia-content');
+
+                        btn.disabled = true;
+                        btn.innerText = 'Gerando...';
+                        resumoContainer.style.display = 'block';
+                        resumoContent.innerHTML = '<div style="text-align:center; color:#6b7280;">⏳ Processando informações com Inteligência Artificial, por favor aguarde...</div>';
+
+                        const partesStr = p.partes && p.partes.length > 0 
+                            ? p.partes.map(parte => parte.tipo + ': ' + parte.nome).join(', ') 
+                            : 'Nenhuma parte vinculada.';
+                        
+                        const tramitesStr = p.tramites && p.tramites.length > 0
+                            ? p.tramites.map(t => t.data + ' [' + t.tipo + '] ' + t.descricao).join('; ')
+                            : 'Nenhum trâmite registrado.';
+
+                        const processDataPayload = `
+Processo Nº: ${p.numero || 'N/A'}
+Vara: ${p.vara || 'N/A'}
+Assunto: ${p.assunto || 'N/A'}
+Status: ${p.status || 'N/A'}
+Data de Início: ${p.data_inicio || 'N/A'}
+Partes: ${partesStr}
+Trâmites: ${tramitesStr}
+                        `.trim();
+
+                        fetch('http://localhost:8000/summary', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ process_data: processDataPayload })
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error('Erro ao gerar resumo da API externa.');
+                            return response.json();
+                        })
+                        .then(data => {
+                            btn.innerText = 'Resumo Gerado';
+                            resumoContent.innerHTML = '<strong>Resumo da IA:</strong><br><p style="white-space: pre-wrap; margin-top: 10px;">' + data.summary + '</p>';
+                        })
+                        .catch(error => {
+                            btn.disabled = false;
+                            btn.innerText = 'Tentar Novamente';
+                            resumoContent.innerHTML = '<div style="color:#ef4444;">❌ Ocorreu um erro ao gerar o resumo: ' + error.message + '</div>';
+                        });
+                    });
                 })
                 .catch(error => {
                     container.innerHTML = '<div class="process-details-card">' +
@@ -113,5 +172,6 @@
             '</div>';
         }
     </script>
+    <script src="auth.js"></script>
 </body>
 </html>

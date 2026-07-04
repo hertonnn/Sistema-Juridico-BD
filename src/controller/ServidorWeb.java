@@ -30,6 +30,11 @@ public class ServidorWeb {
             server.createContext("/api/advogado", new AdvogadoDetalheApiHandler(con));
             server.createContext("/api/lei", new LeiDetalheApiHandler(con));
             
+            // Endpoints para Login e Cadastro
+            server.createContext("/api/cadastro", new CadastroApiHandler(con));
+            server.createContext("/api/login", new LoginApiHandler(con));
+
+            
             server.setExecutor(null);
             server.start();
             System.out.println("Servidor Web rodando em http://localhost:8081/");
@@ -426,6 +431,114 @@ public class ServidorWeb {
             } catch(Exception e) {
                 e.printStackTrace();
                 exchange.sendResponseHeaders(500, -1);
+            }
+        }
+    }
+
+    private static java.util.Map<String, String> parseFormData(String body) throws java.io.UnsupportedEncodingException {
+        java.util.Map<String, String> map = new java.util.HashMap<>();
+        String[] pairs = body.split("&");
+        for (String pair : pairs) {
+            String[] kv = pair.split("=");
+            if (kv.length > 1) {
+                String key = java.net.URLDecoder.decode(kv[0], "UTF-8");
+                String value = java.net.URLDecoder.decode(kv[1], "UTF-8");
+                map.put(key, value);
+            }
+        }
+        return map;
+    }
+
+    static class CadastroApiHandler implements HttpHandler {
+        private Connection con;
+        public CadastroApiHandler(Connection con) { this.con = con; }
+        
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if ("POST".equals(exchange.getRequestMethod())) {
+                try {
+                    java.io.InputStream is = exchange.getRequestBody();
+                    String body = new String(is.readAllBytes(), "UTF-8");
+                    java.util.Map<String, String> data = parseFormData(body);
+                    
+                    String nome = data.get("nome");
+                    String email = data.get("email");
+                    String senha = data.get("senha"); // Na vida real, a senha deveria ser criptografada com hash
+                    
+                    java.sql.PreparedStatement st = con.prepareStatement("INSERT INTO Usuario (nome, email, senha) VALUES (?, ?, ?)");
+                    st.setString(1, nome);
+                    st.setString(2, email);
+                    st.setString(3, senha);
+                    st.executeUpdate();
+                    st.close();
+                    
+                    String response = "Cadastro realizado com sucesso";
+                    exchange.sendResponseHeaders(200, response.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(response.getBytes());
+                    os.close();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    String response = "Erro ao realizar cadastro";
+                    exchange.sendResponseHeaders(500, response.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(response.getBytes());
+                    os.close();
+                }
+            } else {
+                exchange.sendResponseHeaders(405, -1);
+            }
+        }
+    }
+
+    static class LoginApiHandler implements HttpHandler {
+        private Connection con;
+        public LoginApiHandler(Connection con) { this.con = con; }
+        
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            if ("POST".equals(exchange.getRequestMethod())) {
+                try {
+                    java.io.InputStream is = exchange.getRequestBody();
+                    String body = new String(is.readAllBytes(), "UTF-8");
+                    java.util.Map<String, String> data = parseFormData(body);
+                    
+                    String email = data.get("email");
+                    String senha = data.get("senha");
+                    
+                    java.sql.PreparedStatement st = con.prepareStatement("SELECT * FROM Usuario WHERE email = ? AND senha = ?");
+                    st.setString(1, email);
+                    st.setString(2, senha);
+                    java.sql.ResultSet rs = st.executeQuery();
+                    
+                    if (rs.next()) {
+                        String nomeUsuario = rs.getString("nome");
+                        String jsonResponse = "{\"status\":\"sucesso\", \"nome\":\"" + nomeUsuario + "\"}";
+                        byte[] responseBytes = jsonResponse.getBytes("UTF-8");
+                        exchange.getResponseHeaders().set("Content-Type", "application/json; charset=UTF-8");
+                        exchange.sendResponseHeaders(200, responseBytes.length);
+                        OutputStream os = exchange.getResponseBody();
+                        os.write(responseBytes);
+                        os.close();
+                    } else {
+                        String response = "Credenciais invalidas";
+                        exchange.sendResponseHeaders(401, response.length());
+                        OutputStream os = exchange.getResponseBody();
+                        os.write(response.getBytes());
+                        os.close();
+                    }
+                    rs.close();
+                    st.close();
+                } catch(Exception e) {
+                    e.printStackTrace();
+                    String response = "Erro ao realizar login";
+                    exchange.sendResponseHeaders(500, response.length());
+                    OutputStream os = exchange.getResponseBody();
+                    os.write(response.getBytes());
+                    os.close();
+                }
+            } else {
+                exchange.sendResponseHeaders(405, -1);
             }
         }
     }

@@ -10,6 +10,7 @@ DROP TABLE IF EXISTS Parte CASCADE;
 DROP TABLE IF EXISTS Processo CASCADE;
 DROP TABLE IF EXISTS Vara CASCADE;
 DROP TABLE IF EXISTS Pessoa CASCADE;
+DROP TABLE IF EXISTS Usuario CASCADE;
 
 -- ==============================================================================
 -- 1. ESTRUTURA DO BANCO DE DADOS
@@ -89,11 +90,11 @@ CREATE TABLE Tramite (
 
 
 -- Tabela 6: Usuario
-CREATE TABLE Usuario (                                                                                                                                                                  
-    id_usuario SERIAL PRIMARY KEY,                                                                                                                                                      
-    nome VARCHAR(100) NOT NULL,                                                                                                                                                         
-    email VARCHAR(100) UNIQUE NOT NULL,                                                                                                                                                 
-    senha VARCHAR(255) NOT NULL                                                                                                                                                         
+CREATE TABLE Usuario (                                                                                                                                                                                                                                        
+    id_usuario SERIAL PRIMARY KEY,                                                                                                                                                                                                                                
+    nome VARCHAR(100) NOT NULL,                                                                                                                                                                                                                                   
+    email VARCHAR(100) UNIQUE NOT NULL,                                                                                                                                                                                                                           
+    senha VARCHAR(255) NOT NULL                                                                                                                                                                                                                                   
 ); 
 
 -- ==============================================================================
@@ -121,20 +122,20 @@ INSERT INTO Vara (nome, tipo, entrancia) VALUES
 
 -- Inserindo Pessoas (Físicas e Jurídicas)
 INSERT INTO Pessoa (primeiro_nome, ultimo_nome, cpf_cnpj, tipo_pessoa, sexo, data_nascimento) VALUES
-('Adriano', 'Silva', '123.456.789-10', 'Física', 'M', '2001-01-10'),
+('Lucas', 'Gomes', '123.456.789-10', 'Física', 'M', '2001-01-10'),
 ('Empresa ABC Ltda', '', '83.891.283/0001-36', 'Jurídica', NULL, NULL),
-('Herton', 'Silveira', '987.654.321-00', 'Física', 'M', '2000-11-30'),
-('Carlos', 'Mendes', '123.789.456-10', 'Física', 'M', '1985-04-12'),
-('Ana', 'Maria', '123.654.789-00', 'Física', 'F', '1998-12-30'),
-('Carlos Eduardo', 'Souza', '321.654.987-11', 'Física', 'M', '1990-05-22'),
+('Rafael', 'Martins', '987.654.321-00', 'Física', 'M', '2000-11-30'),
+('Bruno', 'Alves', '123.789.456-10', 'Física', 'M', '1985-04-12'),
+('Fernanda', 'Lima', '123.654.789-00', 'Física', 'F', '1998-12-30'),
+('Thiago', 'Ribeiro', '321.654.987-11', 'Física', 'M', '1990-05-22'),
 ('Banco Sul S/A', '', '12.345.678/0001-99', 'Jurídica', NULL, NULL),
-('Mariana', 'Alcantara', '456.789.123-22', 'Física', 'F', '1982-10-15'),
+('Camila', 'Rocha', '456.789.123-22', 'Física', 'F', '1982-10-15'),
 ('Estado de Santa Catarina', '', '82.951.222/0001-44', 'Jurídica', NULL, NULL),
-('Roberto', 'Alencar', '789.123.456-33', 'Física', 'M', '1975-08-08'),
+('Diego', 'Farias', '789.123.456-33', 'Física', 'M', '1975-08-08'),
 ('Tech Soluções Ltda', '', '99.888.777/0001-55', 'Jurídica', NULL, NULL),
-('Juliana', 'Ferreira', '111.222.333-44', 'Física', 'F', '1992-07-14'),
+('Beatriz', 'Nunes', '111.222.333-44', 'Física', 'F', '1992-07-14'),
 ('Condomínio Edifício Central', '', '44.555.666/0001-77', 'Jurídica', NULL, NULL),
-('Marcelo', 'Pereira', '555.666.777-88', 'Física', 'M', '1980-02-28'); -- Perito
+('Rodrigo', 'Cardoso', '555.666.777-88', 'Física', 'M', '1980-02-28'); -- Perito
 
 -- Inserindo Processos
 INSERT INTO Processo (numero_processo, tipo_processo, assunto, status, data_inicio, data_encerramento, fk_id_vara) VALUES
@@ -147,33 +148,33 @@ INSERT INTO Processo (numero_processo, tipo_processo, assunto, status, data_inic
 ('0011223-99.2026.8.24.0090', 'Ação de Despejo', 'Falta de Pagamento', 'Em Andamento', '2026-06-05', NULL, 7);
 
 -- Inserindo Partes (Relações Pessoa <-> Processo)
--- Processo 1: Empresa ABC cobra Carlos Mendes
+-- Processo 1: Empresa ABC cobra Bruno Alves
 INSERT INTO Parte (fk_id_pessoa, fk_id_processo, parte_tipo) VALUES
 (2, 1, 'Autor'),
 (4, 1, 'Réu');
 
--- Processo 2: Ana Maria e Carlos Mendes se divorciam
+-- Processo 2: Fernanda Lima e Bruno Alves se divorciam
 INSERT INTO Parte (fk_id_pessoa, fk_id_processo, parte_tipo) VALUES
 (5, 2, 'Requerente'),
 (4, 2, 'Requerido');
 
--- Processo 3: Carlos Eduardo contra Banco Sul
+-- Processo 3: Thiago Ribeiro contra Banco Sul
 INSERT INTO Parte (fk_id_pessoa, fk_id_processo, parte_tipo) VALUES
 (6, 3, 'Autor'),
 (7, 3, 'Réu');
 
--- Processo 4: Mariana contra Estado de SC
+-- Processo 4: Camila Rocha contra Estado de SC
 INSERT INTO Parte (fk_id_pessoa, fk_id_processo, parte_tipo) VALUES
 (8, 4, 'Impetrante'),
 (9, 4, 'Impetrado');
 
--- Processo 5: Roberto contra Tech Soluções + Perito Marcelo
+-- Processo 5: Diego Farias contra Tech Soluções + Perito Rodrigo Cardoso
 INSERT INTO Parte (fk_id_pessoa, fk_id_processo, parte_tipo) VALUES
 (10, 5, 'Reclamante'),
 (11, 5, 'Reclamada'),
 (14, 5, 'Perito Judicial');
 
--- Processo 6: Estado de SC cobra Juliana
+-- Processo 6: Estado de SC cobra Beatriz Nunes
 INSERT INTO Parte (fk_id_pessoa, fk_id_processo, parte_tipo) VALUES
 (9, 6, 'Exequente'),
 (12, 6, 'Executado');
@@ -283,10 +284,10 @@ CREATE INDEX idx_proc_lei_processo ON Processo_Lei(fk_id_processo);
 
 -- Inserindo Pessoas que serão Advogados (CPFs alterados para evitar conflito com dados anteriores)
 INSERT INTO Pessoa (primeiro_nome, ultimo_nome, cpf_cnpj, tipo_pessoa, sexo, data_nascimento) VALUES
-('Carlos Eduardo', 'Pinheiro', '111.555.333-44', 'Física', 'M', '1980-01-01'),
-('Mariana', 'Costa', '222.666.444-55', 'Física', 'F', '1985-02-02'),
-('Felipe', 'Ramos', '333.777.555-66', 'Física', 'M', '1990-03-03'),
-('Patrícia', 'Antunes', '444.888.666-77', 'Física', 'F', '1988-05-12'); -- Advogada extra
+('Vitor', 'Carvalho', '111.555.333-44', 'Física', 'M', '1980-01-01'),
+('Aline', 'Teixeira', '222.666.444-55', 'Física', 'F', '1985-02-02'),
+('Gustavo', 'Moraes', '333.777.555-66', 'Física', 'M', '1990-03-03'),
+('Letícia', 'Barbosa', '444.888.666-77', 'Física', 'F', '1988-05-12'); -- Advogada extra
 
 -- Vinculando na tabela de Advogados usando subqueries seguras baseadas nos novos CPFs
 INSERT INTO Advogado (fk_id_pessoa, oab, area_atuacao) VALUES
@@ -304,18 +305,18 @@ INSERT INTO Lei (titulo, descricao) VALUES
 ('Lei nº 8.245 (Lei do Inquilinato)', 'Dispõe sobre as locações dos imóveis urbanos e os procedimentos a elas pertinentes.');
 
 -- Vinculando Advogados aos Processos e Clientes existentes
--- Relembrando IDs do histórico: Proc 1 (ABC vs Carlos Mendes), Proc 5 (Roberto vs Tech Soluções), Proc 7 (Condomínio vs Adriano e Herton)
+-- Relembrando IDs do histórico: Proc 1 (ABC vs Bruno Alves), Proc 5 (Diego Farias vs Tech Soluções), Proc 7 (Condomínio vs Lucas Gomes e Rafael Martins)
 INSERT INTO Processo_Advogado (fk_id_advogado, fk_id_processo, fk_id_cliente) VALUES
--- Advogado Carlos Pinheiro (id_pessoa via CPF) defendendo Carlos Mendes (id_pessoa=4) no Processo 1
+-- Advogado Vitor Carvalho (id_pessoa via CPF) defendendo Bruno Alves (id_pessoa=4) no Processo 1
 ((SELECT id_pessoa FROM Pessoa WHERE cpf_cnpj = '111.555.333-44'), 1, 4),
 
--- Advogada Mariana Costa defendendo Roberto (id_pessoa=10) no Processo 5 (Trabalhista)
+-- Advogada Aline Teixeira defendendo Diego Farias (id_pessoa=10) no Processo 5 (Trabalhista)
 ((SELECT id_pessoa FROM Pessoa WHERE cpf_cnpj = '222.666.444-55'), 5, 10),
 
--- Advogado Felipe Ramos defendendo Tech Soluções Ltda (id_pessoa=11) no Processo 5 (Trabalhista)
+-- Advogado Gustavo Moraes defendendo Tech Soluções Ltda (id_pessoa=11) no Processo 5 (Trabalhista)
 ((SELECT id_pessoa FROM Pessoa WHERE cpf_cnpj = '333.777.555-66'), 5, 11),
 
--- Advogada Patrícia Antunes defendendo Adriano Silva (id_pessoa=1) no Processo 7 (Despejo)
+-- Advogada Letícia Barbosa defendendo Lucas Gomes (id_pessoa=1) no Processo 7 (Despejo)
 ((SELECT id_pessoa FROM Pessoa WHERE cpf_cnpj = '444.888.666-77'), 7, 1);
 
 -- Vinculando Leis aos Processos (Fundamentação)

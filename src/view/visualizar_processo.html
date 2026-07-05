@@ -95,8 +95,8 @@
                         '</div>' +
                         '<hr class="divider">' +
                         '<div style="display: flex; justify-content: space-between; align-items: center;">' +
-                            '<h3>Resumo Inteligente (IA)</h3>' +
-                            '<button id="btn-gerar-resumo" class="btn btn-primary btn-sm">Gerar Resumo com IA</button>' +
+                            '<h3>Resumo Inteligente</h3>' +
+                            '<button id="btn-gerar-resumo" class="btn btn-primary btn-sm">Gerar Resumo</button>' +
                         '</div>' +
                         '<div id="resumo-ia-container" style="display:none; margin-top: 15px; padding: 15px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px;">' +
                             '<div id="resumo-ia-content"></div>' +
@@ -123,9 +123,21 @@
                             ? p.partes.map(parte => parte.tipo + ': ' + parte.nome).join(', ') 
                             : 'Nenhuma parte vinculada.';
                         
-                        const tramitesStr = p.tramites && p.tramites.length > 0
-                            ? p.tramites.map(t => t.data + ' [' + t.tipo + '] ' + t.descricao).join('; ')
-                            : 'Nenhum trâmite registrado.';
+                        let tramitesStr = 'Nenhum trâmite registrado.';
+                        if (p.tramites && p.tramites.length > 0) {
+                            const parseDate = (d) => {
+                                if (!d) return 0;
+                                const parts = d.split(/[\/\- ]/);
+                                if (parts.length >= 3 && parts[2].length === 4) {
+                                    return new Date(`${parts[2]}-${parts[1]}-${parts[0]}`).getTime();
+                                }
+                                return new Date(d).getTime();
+                            };
+                            const tramitesOrdenados = [...p.tramites].sort((a, b) => parseDate(a.data) - parseDate(b.data));
+                            tramitesStr = '\n' + tramitesOrdenados.map((t, index) => {
+                                return `Trâmite ${index + 1}:\n- Data: ${t.data}\n- Tipo: ${t.tipo}\n- Descrição: ${t.descricao}`;
+                            }).join('\n\n');
+                        }
 
                         const processDataPayload = `
 Processo Nº: ${p.numero || 'N/A'}
@@ -136,7 +148,8 @@ Data de Início: ${p.data_inicio || 'N/A'}
 Partes: ${partesStr}
 Trâmites: ${tramitesStr}
                         `.trim();
-
+                        
+                        console.log(processDataPayload)
                         fetch('http://localhost:8000/summary', {
                             method: 'POST',
                             headers: {
@@ -150,7 +163,7 @@ Trâmites: ${tramitesStr}
                         })
                         .then(data => {
                             btn.innerText = 'Resumo Gerado';
-                            resumoContent.innerHTML = '<strong>Resumo da IA:</strong><br><p style="white-space: pre-wrap; margin-top: 10px;">' + data.summary + '</p>';
+                            resumoContent.innerHTML = '<p style="white-space: pre-wrap; margin-top: 10px;">' + data.summary + '</p>';
                         })
                         .catch(error => {
                             btn.disabled = false;

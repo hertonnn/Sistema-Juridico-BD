@@ -110,8 +110,8 @@ def _format_sample_data(sample_data: dict[str, list[dict[str, Any]]]) -> str:
 # Camada 3 — Resumo Jurídico
 # ---------------------------------------------------------------------------
 
-SUMMARY_SYSTEM_PROMPT = """Sua tarefa é ler as informações de um processo e gerar um resumo simplificado em algumas linhas para um público geral."""
+SUMMARY_SYSTEM_PROMPT = """Gere um resumo simplificado em um parágrafo curto para um público geral. Entregue apenas o texto resumido, sem formatações."""
 
 
 def build_summary_user_prompt(process_data: str) -> str:
-    return f"Por favor, faça um resumo jurídico das seguintes informações processuais:\n\n{process_data}"
+    return f"Faça um resumo das seguintes informações processuais:\n\n{process_data}"
